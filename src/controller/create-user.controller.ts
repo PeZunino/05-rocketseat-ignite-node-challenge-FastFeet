@@ -7,7 +7,8 @@ import { PrismaService } from '@/prisma/prisma.service';
 
 
 const createUserBodySchema = z.object({
-	cpf: z.string(),
+	cpf: z.string()
+		.length(11),
 	name: z.string(),
 	email: z.string()
 		.email(),
