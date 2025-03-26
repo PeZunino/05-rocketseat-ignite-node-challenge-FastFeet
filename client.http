@@ -1,0 +1,13 @@
+@baseUrl = http://localhost:3000
+
+# @name create_user
+POST  {{baseUrl}}/users
+Content-Type: application/json
+
+{
+	"cpf":"123445123123",
+	"name":"Pedro Zunino",
+	"password":"123456",
+	"role":"ADMIN",
+	"email":"pedrozuneeefino@gmail.com"
+}
