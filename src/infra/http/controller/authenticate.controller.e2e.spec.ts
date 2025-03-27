@@ -1,10 +1,11 @@
 import { INestApplication } from '@nestjs/common';
 import {Test} from '@nestjs/testing';
+import { hash } from 'bcryptjs';
 import request from 'supertest';
-import { AppModule } from '@/app.module';
+import { AppModule } from '@/infra/app.module';
 import { PrismaService } from '@/prisma/prisma.service';
 
-describe('Create user (E2E)',()=>{
+describe('Auth user (E2E)',()=>{
 	let app:INestApplication;
 
 	let prisma: PrismaService;
@@ -25,22 +26,28 @@ describe('Create user (E2E)',()=>{
 	});
 
 	test('[POST] /users', async ()=>{
-		const response = await request(app.getHttpServer())
-			.post('/users')
-			.send({
+		await prisma.user.create({
+			data:{
 				cpf:'10033273979',
 				name:'Pedro Zunino',
-				password:'123456',
+				password: await hash('123456',8),
 				role:'ADMIN',
 				email:'pedrozunino@gmail.com'
+			}
+		});
+
+		const response = await request(app.getHttpServer())
+			.post('/sessions')
+			.send({
+				cpf:'10033273979',
+				password:'123456',
 			});
 
 		expect(response.statusCode)
 			.toBe(201);
-		
-		const userOnDatabase = await prisma.user.findUnique({where:{email:'pedrozunino@gmail.com'}});
-
-		expect (userOnDatabase)
-			.toBeTruthy();
+    
+		expect(response.body)
+			.toEqual({access_token: expect.any(String)});
+    
 	});
 });
