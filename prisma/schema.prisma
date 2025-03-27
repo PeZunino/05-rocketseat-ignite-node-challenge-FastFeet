@@ -9,7 +9,7 @@ datasource db {
 
 enum Role {
   ADMIN
-  DELIVERYMAN
+  COURIER
 }
 
 model User {
@@ -21,7 +21,7 @@ model User {
   name              String
   createdAt         DateTime  @default(now()) @map("created_at")
   updatedAt         DateTime? @updatedAt
-  deliveredPackages Package[] @relation("deliveryMan")
+  deliveredPackages Package[] @relation("courier")
   createdPackages   Package[] @relation("admin")
 
   @@map("users")
@@ -53,8 +53,8 @@ model Package {
   receiver   Receiver @relation(fields: [receiverId], references: [id])
   receiverId String   @map("receiver_id")
 
-  deliveryMan   User   @relation(name: "deliveryMan", fields: [deliveryManId], references: [id])
-  deliveryManId String @map("deliveryman_id")
+  courier   User   @relation(name: "courier", fields: [courierId], references: [id])
+  courierId String @map("courier_id")
 
   admin   User   @relation(name: "admin", fields: [adminId], references: [id])
   adminId String @map("admin_id")
