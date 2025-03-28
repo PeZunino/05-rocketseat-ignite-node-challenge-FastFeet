@@ -1,7 +1,7 @@
 import { ConflictException } from '@nestjs/common';
 import { makeUser } from 'test/factories/make-user';
 import { InMemoryUsersRepository } from 'test/repositories/in-memory-users.repository';
-import { CreateUserUseCase } from './create-user.usecase';
+import { CreateUserUseCase } from './create-user.service';
 
 let sut: CreateUserUseCase;
 
