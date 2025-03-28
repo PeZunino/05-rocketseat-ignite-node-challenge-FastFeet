@@ -3,31 +3,29 @@ import { hash } from 'bcryptjs';
 import { Either, failure, success } from '@/core/either';
 import { UserEntity } from '@/core/entities/abstract-user.entity';
 import { Role } from '@/core/entities/role.enum';
-import { UniqueEntityID } from '@/core/entities/unique-id-entity';
 import { UserFactory } from '@/core/entities/user-entity-fabric';
 import { UsersRepository } from '../repositories/users.repository';
 
-interface CreateUserUseCaseRequest{
+interface CreateUserServiceRequest{
 	cpf: string,
 	email: string,
 	name:string,
 	password:string,
 	role:Role,
-	packages: UniqueEntityID[]
 }
 
 
-type CreateUserUseCaseResponse = Either<ConflictException,{
+type CreateUserServiceResponse = Either<ConflictException,{
 	user:UserEntity
 }>
 
 @Injectable()
-export class CreateUserUseCase{
+export class CreateUserService{
 	constructor(private usersRepository:UsersRepository){}
 
 	async execute({
-		cpf,email,name,password,role,packages
-	}:CreateUserUseCaseRequest):Promise<CreateUserUseCaseResponse>{
+		cpf,email,name,password,role
+	}:CreateUserServiceRequest):Promise<CreateUserServiceResponse>{
     
 		const userWithSameCPF = await this.usersRepository.findByCPF(cpf);
     
@@ -43,14 +41,13 @@ export class CreateUserUseCase{
 
 		const hashedPassword = await hash(password, 8);
 		
-				
+			
 		const user = UserFactory.create({
 			cpf,
 			email,
 			name,
 			password:hashedPassword,
 			role,
-			packages
 		});
 			
 		await this.usersRepository.create(user);

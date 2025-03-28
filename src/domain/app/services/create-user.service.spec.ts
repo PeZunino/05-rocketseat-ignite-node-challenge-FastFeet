@@ -1,9 +1,9 @@
 import { ConflictException } from '@nestjs/common';
 import { makeUser } from 'test/factories/make-user';
 import { InMemoryUsersRepository } from 'test/repositories/in-memory-users.repository';
-import { CreateUserUseCase } from './create-user.service';
+import { CreateUserService } from './create-user.service';
 
-let sut: CreateUserUseCase;
+let sut: CreateUserService;
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
 
@@ -11,7 +11,7 @@ describe('Create User',()=>{
 	beforeEach(()=>{
 		inMemoryUsersRepository = new InMemoryUsersRepository();
 
-		sut = new CreateUserUseCase(inMemoryUsersRepository);
+		sut = new CreateUserService(inMemoryUsersRepository);
 
 	});
 
