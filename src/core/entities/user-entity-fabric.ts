@@ -7,6 +7,7 @@ import { UniqueEntityID } from './unique-id-entity';
 // Factory para criar usuário baseado no tipo de role
 export class UserFactory {
 	static create(props: {
+		id?:UniqueEntityID;
 		cpf: string;
 		email: string;
 		name: string;
