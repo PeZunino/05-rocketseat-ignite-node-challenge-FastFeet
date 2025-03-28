@@ -8,12 +8,12 @@ export class Failure<L,R> {
 		this.value = value;
 	}
 
-	isRight(): this is Success<L, R> {
+	isSuccessful(): this is Success<L, R> {
 
 		return false;
 	}
 	
-	isLeft(): this is Failure<L, R> {
+	isFailure(): this is Failure<L, R> {
 	
 		return true;
 	}
@@ -26,12 +26,12 @@ export class Success<L,R> {
 		this.value = value;
 	}
 
-	isRight(): this is Success<L, R> {
+	isSuccessful(): this is Success<L, R> {
 
 		return true;
 	}
 	
-	isLeft(): this is Failure<L, R> {
+	isFailure(): this is Failure<L, R> {
 	
 		return false;
 	}
