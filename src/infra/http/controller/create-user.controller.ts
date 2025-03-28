@@ -1,8 +1,8 @@
-import { Body, ConflictException, Controller, Post, UsePipes } from '@nestjs/common';
-import { Role } from '@prisma/client';
-import { hash } from 'bcryptjs';
+import { Body, Controller, Post, UsePipes } from '@nestjs/common';
 import { z } from 'zod';
-import { PrismaService } from '@/infra/database/prisma/prisma.service';
+import { Role } from '@/core/entities/role.enum';
+import { UniqueEntityID } from '@/core/entities/unique-id-entity';
+import { CreateUserService } from '@/domain/app/services/create-user.service';
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe';
 
 
@@ -14,6 +14,9 @@ const createUserBodySchema = z.object({
 		.email(),
 	password: z.string(),
 	role: z.nativeEnum(Role),
+	packages: z.string()
+		.uuid()
+		.array()
 });
 
 type CreateUserBodySchema = z.infer<typeof createUserBodySchema>
@@ -21,38 +24,24 @@ type CreateUserBodySchema = z.infer<typeof createUserBodySchema>
 @Controller('/users')
 export class CreateUserController{
 
-	constructor(private prisma: PrismaService){}
+	constructor(private createUserService: CreateUserService){}
 
 	@Post()
 	@UsePipes(new ZodValidationPipe(createUserBodySchema))
 	async handle(@Body() body:CreateUserBodySchema){
-
 		const {
-			cpf,email,name,password,role
+			cpf,email,name,packages,password,role
 		} = body;
 
-		const userWithSameCPF = await this.prisma.user.findUnique({where:{cpf}});
-
-		const userWithSameEmail = await this.prisma.user.findUnique({where:{email}});
-
-		if(userWithSameCPF){
-			throw new ConflictException('User with this CPF already exist');
-		}
-
-		if(userWithSameEmail){
-			throw new ConflictException('Email already in use');
-		}
-
-		const hashedPassword = await hash(password, 8);
-
-		await this.prisma.user.create({
-			data:{
-				cpf,
-				name,
-				password:hashedPassword,
-				role,
-				email
-			}
+		const response = await this.createUserService.execute({
+			cpf,
+			email,
+			name,
+			packages: packages.map(i=>new UniqueEntityID(i)),
+			password,
+			role: role as Role
 		});
+
+		return response.value;
 	}
 }

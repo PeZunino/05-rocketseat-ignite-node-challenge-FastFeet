@@ -10,6 +10,6 @@ import { CreateUserController } from './controller/create-user.controller';
 	controllers: [
 		CreateUserController,
 		AuthenticateController
-	]
+	],
 })
 export class HttpModule{}
