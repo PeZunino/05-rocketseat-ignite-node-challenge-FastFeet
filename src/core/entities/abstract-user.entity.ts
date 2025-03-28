@@ -3,15 +3,15 @@ import { Role } from '@/core/entities/role.enum';
 import { UniqueEntityID } from '@/core/entities/unique-id-entity';
 import { Optional } from '../types/optional';
 
-interface UserEntityProps{
+export interface UserEntityProps{
 	email: string         
 	role: Role
 	cpf:string
 	password:string        
 	name:string  
 	createdAt: Date  
-	updatedAt?: Date 
-	packages:UniqueEntityID[]
+	updatedAt?: Date | null
+	packages?:UniqueEntityID[]
 }
 
 export abstract class UserEntity extends Entity<UserEntityProps>{
@@ -47,16 +47,16 @@ export abstract class UserEntity extends Entity<UserEntityProps>{
 	get updatedAt(){
 		return this.props.updatedAt;
 	}
-	get packages(){
-		return this.props.packages;
-	}
+	// get packages(){
+	// 	return this.props.packages;
+	// }
   
 	
-	set packages(ids:UniqueEntityID[]){
-		this.props.packages = ids;
+	// set packages(ids:UniqueEntityID[]){
+	// 	this.props.packages = ids;
 
-		this.touch();
-	}
+	// 	this.touch();
+	// }
 	set email(email:string){
 		this.props.email = email;
 
