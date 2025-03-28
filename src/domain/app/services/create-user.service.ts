@@ -4,7 +4,7 @@ import { Either, failure, success } from '@/core/either';
 import { UserEntity } from '@/core/entities/abstract-user.entity';
 import { Role } from '@/core/entities/role.enum';
 import { UserFactory } from '@/core/entities/user-entity-fabric';
-import { UsersRepository } from '../repositories/users.repository';
+import { PrismaUsersRepository } from '@/infra/database/prisma/repositories/prisma-users.repository';
 
 interface CreateUserServiceRequest{
 	cpf: string,
@@ -21,7 +21,7 @@ type CreateUserServiceResponse = Either<ConflictException,{
 
 @Injectable()
 export class CreateUserService{
-	constructor(private usersRepository:UsersRepository){}
+	constructor(private usersRepository:PrismaUsersRepository){}
 
 	async execute({
 		cpf,email,name,password,role
@@ -48,8 +48,9 @@ export class CreateUserService{
 			name,
 			password:hashedPassword,
 			role,
+			packages: []
 		});
-			
+		
 		await this.usersRepository.create(user);
 
 		return success({user});

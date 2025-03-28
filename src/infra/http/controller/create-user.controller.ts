@@ -1,7 +1,6 @@
 import { Body, Controller, Post, UsePipes } from '@nestjs/common';
 import { z } from 'zod';
 import { Role } from '@/core/entities/role.enum';
-import { UniqueEntityID } from '@/core/entities/unique-id-entity';
 import { CreateUserService } from '@/domain/app/services/create-user.service';
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe';
 
@@ -14,9 +13,6 @@ const createUserBodySchema = z.object({
 		.email(),
 	password: z.string(),
 	role: z.nativeEnum(Role),
-	packages: z.string()
-		.uuid()
-		.array()
 });
 
 type CreateUserBodySchema = z.infer<typeof createUserBodySchema>
@@ -30,18 +26,16 @@ export class CreateUserController{
 	@UsePipes(new ZodValidationPipe(createUserBodySchema))
 	async handle(@Body() body:CreateUserBodySchema){
 		const {
-			cpf,email,name,packages,password,role
+			cpf,email,name,password,role
 		} = body;
 
-		const response = await this.createUserService.execute({
+		await this.createUserService.execute({
 			cpf,
 			email,
 			name,
-			packages: packages.map(i=>new UniqueEntityID(i)),
 			password,
 			role: role as Role
 		});
 
-		return response.value;
 	}
 }

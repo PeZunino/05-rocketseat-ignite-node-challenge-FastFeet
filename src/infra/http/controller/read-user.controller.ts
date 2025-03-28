@@ -12,11 +12,12 @@ import { RolesGuard } from '@/infra/auth/role.guard';
 export class ReadUserController{
 
 	constructor(private readUserService: ReadUserService){}
+	
 	@Get()
 	@Roles('ADMIN')
 	@HttpCode(200)
 	async handle(@CurrentUser() user: UserPayload){
-		const response = await this.readUserService.execute({id: new UniqueEntityID(user.sub)});
+		const response = await this.readUserService.execute({requiredId: new UniqueEntityID(user.sub)});
 
 		return response.value;
 	}

@@ -10,7 +10,7 @@ import { PrismaUsersRepository } from './prisma/repositories/prisma-users.reposi
 	exports:[ //* FORA DO MODULO
 		PrismaService,
 		PrismaUsersRepository
-
+		
 	]
 })
 export class DatabaseModule{}

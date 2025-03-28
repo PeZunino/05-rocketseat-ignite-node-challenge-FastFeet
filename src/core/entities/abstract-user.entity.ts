@@ -11,7 +11,7 @@ export interface UserEntityProps{
 	name:string  
 	createdAt: Date  
 	updatedAt?: Date | null
-	packages?:UniqueEntityID[]
+	packages:UniqueEntityID[] 
 }
 
 export abstract class UserEntity extends Entity<UserEntityProps>{
@@ -47,16 +47,16 @@ export abstract class UserEntity extends Entity<UserEntityProps>{
 	get updatedAt(){
 		return this.props.updatedAt;
 	}
-	// get packages(){
-	// 	return this.props.packages;
-	// }
+	get packages(){
+		return this.props.packages;
+	}
   
 	
-	// set packages(ids:UniqueEntityID[]){
-	// 	this.props.packages = ids;
+	set packages(ids:UniqueEntityID[]){
+		this.props.packages = ids;
 
-	// 	this.touch();
-	// }
+		this.touch();
+	}
 	set email(email:string){
 		this.props.email = email;
 
